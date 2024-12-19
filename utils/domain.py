@@ -17,11 +17,11 @@ class Domain:
         self.account = domain_config["posemesh_account"]
         self.password = domain_config["posemesh_password"]
         self.map_endpoint = domain_config["map_endpoint"]
-        self.domain_server = domain_config["domain_server"]
         
         self._posemesh_token = ''
         self._dds_token = ''
         self._domain_info = {}
+        self._domain_server = None
 
     def auth(self):
         # Auth User Posemesh
@@ -55,6 +55,7 @@ class Domain:
         if not ret3:
             return False, 'Failed to authenticate domain access'
         self._domain_info = json.loads(response3.text)
+        self._domain_server = self._domain_info["domain_server"]["url"]
 
         return True, ''
 
@@ -66,7 +67,7 @@ class Domain:
 
         body = {
             'domainId': self.domain_id,
-            'domainServerUrl': self.domain_server,
+            'domainServerUrl': self._domain_server,
             'height': 0.1,
             'pixelsPerMeter': resolution
         }
