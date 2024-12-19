@@ -1,0 +1,6 @@
+domain:
+  domain_id: "domain_id"
+  domain_server: "domain_server"
+  posemesh_account: user@website.com
+  posemesh_password: Password
+  map_endpoint: "https://dsc.dev.aukiverse.com/spatial/crosssection"
