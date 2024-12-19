@@ -12,8 +12,7 @@ All configuration information is accessible through your [Auki Network account](
 
 You will need to add the following details in the `config/default.yaml` file:  
 
-- **`domain_id`**: The ID of the domain you want the map for.  
-- **`domain_server`**: Visible next to your domain in the **Domains** tab.  
+- **`domain_id`**: The ID of the domain you want the map for.
 - **`posemesh_account`**: Your console username (e.g., `user@website.com`).  
 - **`posemesh_password`**: Your console password.  
 - **`map_endpoint`**: `https://dsc.dev.aukiverse.com/spatial/crosssection`  
