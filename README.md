@@ -15,7 +15,7 @@ You will need to add the following details in the `config/default.yaml` file:
 - **`domain_id`**: The ID of the domain you want the map for.
 - **`posemesh_account`**: Your console username (e.g., `user@website.com`).  
 - **`posemesh_password`**: Your console password.  
-- **`map_endpoint`**: `https://dsc.dev.aukiverse.com/spatial/crosssection`  
+- **`map_endpoint`**: `https://dsc.auki.network/spatial/crosssection`  
   *(No need to change this at this time.)*  
 
 > **Tip:** For security, you can add your robot as a **User** by assigning it to your organization.  
