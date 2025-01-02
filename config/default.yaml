@@ -1,6 +1,6 @@
 domain:
-  domain_id: "679705fe-c2c0-4ec8-9704-169dbb1957bc"
-  posemesh_account: robotics@aukilabs.com
-  posemesh_password: Yj0qtNacgeOZP4
+  domain_id: "domain_id"
+  posemesh_account: user@website.com
+  posemesh_password: Password
   map_endpoint: "https://dsc.auki.network/spatial/crosssection"
   raycast_endpoint: "https://dsc.auki.network/spatial/raycast"
