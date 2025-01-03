@@ -3,3 +3,4 @@ domain:
   posemesh_account: user@website.com
   posemesh_password: Password
   map_endpoint: "https://dsc.auki.network/spatial/crosssection"
+  raycast_endpoint: "https://dsc.auki.network/spatial/raycast"

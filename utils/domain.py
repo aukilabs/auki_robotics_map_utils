@@ -17,6 +17,8 @@ class Domain:
         self.account = domain_config["posemesh_account"]
         self.password = domain_config["posemesh_password"]
         self.map_endpoint = domain_config["map_endpoint"]
+        self.raycast_endpoint = domain_config["raycast_endpoint"]
+
         
         self._posemesh_token = ''
         self._dds_token = ''
@@ -147,4 +149,28 @@ class Domain:
         else:
             print("YAML data not found or could not be saved.")
 
+    def get_raycast(self, pose):
+        method = 'POST'
 
+        url = self.raycast_endpoint
+        headers = {'authorization': f'Bearer {self._domain_info["access_token"]}'}
+
+        body = {
+            'domainId': self.domain_id,
+            'domainServerUrl': self._domain_server,
+            'ray': pose
+        }
+
+        success, raycast = send_request(method, url, headers, body)
+
+        if not success:
+            return False, "Failed to send raycast to domain"
+
+        # Assuming the response is in JSON format
+        try:
+            raycast_data = raycast.json()  # Parse the JSON response
+            print(raycast_data)
+        except ValueError as e:
+            return False, f"Failed to parse response JSON: {e}"
+
+        return True, raycast_data

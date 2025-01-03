@@ -16,13 +16,13 @@ You will need to add the following details in the `config/default.yaml` file:
 - **`posemesh_account`**: Your console username (e.g., `user@website.com`).  
 - **`posemesh_password`**: Your console password.  
 - **`map_endpoint`**: `https://dsc.auki.network/spatial/crosssection`  
-  *(No need to change this at this time.)*  
+- **`raycast_endpoint`**: `https://dsc.auki.network/spatial/raycast`
 
 > **Tip:** For security, you can add your robot as a **User** by assigning it to your organization.  
 
 ---
 
-## Running the Script  
+## Running the Map Extraction Script  
 
 Use the following arguments when running the script:  
 
@@ -38,3 +38,50 @@ Use the following arguments when running the script:
 python3 retrieve_map.py --image-format pgm --resolution 100  
 
 # Note: This will generate a .pgm image at 0.01m per pixel resolution typically used by ROS / ROS2.
+```
+
+
+## New Function - Raycasting
+
+A raycast is an invisible beam sent out from an origin point. It is then possible in the Domain to detect which digital objects this beam would hit. This is extremely important for linking the digital world with the physical world.
+
+The pose of the origin is passed as an argument to the function **`get_raycast(pose)`** where pose is a transformation matrix. The transformation matrix is a combination of the rotation matrix (which defines the orientation) and the translation vector (which defines the position), applied to an object (such as a camera) in 3D space. The response will be a json string with the intersection point (as shown below):
+
+**`{'message': 'Success', 'data': {'hits': [{'point': {'x': -2.3227962546392202, 'y': 0.675, 'z': 0.7821263074874878}, 'distance': 0.5104325206097033, 'normal': {'x': 0, 'y': 0, 'z': -1}, 'faceIndex': 4, 'name': '1451a9ca-2495-4932-bb5d-c97a4a8de6ce:0'}]}}`**
+
+A simple example is provided.
+
+The transformation matrix can be constructed as follows:
+
+### Quaternion to Rotation Matrix
+
+A quaternion `(r_x, r_y, r_z, w)` can be converted into a 3x3 rotation matrix as follows:
+
+|                       |                       |                       |
+|-----------------------|-----------------------|-----------------------|
+| \( 1 - 2(r_y^2 + r_z^2) \) | \( 2(r_xr_y - wr_z) \) | \( 2(r_xr_z + wr_y) \) |
+| \( 2(r_xr_y + wr_z) \) | \( 1 - 2(r_x^2 + r_z^2) \) | \( 2(r_yr_z - wr_x) \) |
+| \( 2(r_xr_z - wr_y) \) | \( 2(r_yr_z + wr_x) \) | \( 1 - 2(r_x^2 + r_y^2) \) |
+
+Where:
+
+- `r_x`, `r_y`, `r_z` are the components of the quaternion (representing the axis of rotation).
+- `w` is the scalar part of the quaternion (representing the cosine of half the rotation angle).
+
+### Transformation Matrix
+
+The 4x4 transformation matrix combines both rotation matrix (from above) and translation to transform an object in 3D space. It can be represented as:
+
+|       |       |       |       |
+|-------|-------|-------|-------|
+| \( R_{11} \) | \( R_{12} \) | \( R_{13} \) | \( p_x \) |
+| \( R_{21} \) | \( R_{22} \) | \( R_{23} \) | \( p_y \) |
+| \( R_{31} \) | \( R_{32} \) | \( R_{33} \) | \( p_z \) |
+| \( 0 \)       | \( 0 \)       | \( 0 \)       | \( 1 \)   |
+
+Where:
+
+- \( R_{ij} \) are the elements of the 3x3 rotation matrix, which defines the orientation of the object.
+- \( p_x, p_y, p_z \) are the components of the translation vector, which defines the position of the object in 3D space.
+- The last row \( [0, 0, 0, 1] \) ensures homogeneous coordinates for matrix multiplication.
+
