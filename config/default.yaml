@@ -4,3 +4,5 @@ domain:
   posemesh_password: Password
   map_endpoint: "https://dsc.auki.network/spatial/crosssection"
   raycast_endpoint: "https://dsc.auki.network/spatial/raycast"
+  navmesh_endpoint: "https://dsc.auki.network/spatial/restricttonavmesh"
+  routing_endpoint: "https://dsc.auki.network/spatial/pathfind"
