@@ -17,6 +17,8 @@ You will need to add the following details in the `config/default.yaml` file:
 - **`posemesh_password`**: Your console password.  
 - **`map_endpoint`**: `https://dsc.auki.network/spatial/crosssection`  
 - **`raycast_endpoint`**: `https://dsc.auki.network/spatial/raycast`
+- **`navmesh_endpoint`**: `https://dsc.auki.network/spatial/restricttonavmesh`
+- **`routing_endpoint`**: `https://dsc.auki.network/spatial/pathfind`
 
 > **Tip:** For security, you can add your robot as a **User** by assigning it to your organization.  
 
@@ -29,8 +31,10 @@ Use the following arguments when running the script:
 | **Argument**           | **Description**                                                                       |  
 |-------------------------|---------------------------------------------------------------------------------------|  
 | `--config CONFIG`       | Path to the YAML config file (if moved).                                              |  
-| `--image-format {png,bmp,pgm}` | Image format for saving the map. Options: `png` (default), `bmp`, or `pgm`.           |  
+| `--image-format {png,bmp,pgm}` | Image format for saving the map. Options: `png` (default), `bmp`, `stcm` or `pgm`.           |  
 | `--resolution RESOLUTION` | Pixels per meter (default: 20, max: 200). Higher values result in more detailed maps. |  
+
+`stcm` will return the proprietary map format used by Slamtec, a robotics and LiDAR specialist whose products are used in many service and utility robots.
 
 ### Example Command  
 
@@ -41,7 +45,7 @@ python3 retrieve_map.py --image-format pgm --resolution 100
 ```
 
 
-## New Function - Raycasting
+## Raycasting
 
 A raycast is an invisible beam sent out from an origin point. It is then possible in the Domain to detect which digital objects this beam would hit. This is extremely important for linking the digital world with the physical world.
 
@@ -85,3 +89,24 @@ Where:
 - \( p_x, p_y, p_z \) are the components of the translation vector, which defines the position of the object in 3D space.
 - The last row \( [0, 0, 0, 1] \) ensures homogeneous coordinates for matrix multiplication.
 
+
+## New functions - Navmesh Optimization
+
+The Navmesh is the navigable pathway drawn in a Domain to set the walkable areas within the map. 
+
+To maximise the use of the Navmesh we have added 2 endpoints and test functions.
+
+Navmesh
+---
+
+The first is navmesh.py, designed to return the nearest point on the navmesh for a destination off-mesh, with the yaw set to face the goal. This was introduced for our Cactus based robots attempting to navigate to a product on a shelf, a solid object it clearly could not arrive at.
+
+For example **`domain_server.get_navmesh_coord(target)`** would return **`{'x': 0, 'z':0, 'yaw': 0}`** where y is assumed to be 0 and at floor level.
+
+Route Optimization
+---
+The second is route optimization, capable of plotting an array of waypoints which have been sorted accordingly, taking into account solid objects and navigable routes.
+
+To optimize this further, we currently return 2 sets of data, original waypoints and onmesh waypoints to allow the user to choose which suits their use-case the best.
+
+**`original_waypoints, onmesh_waypoints = domain_server.optimize_route(waypoints)`**, where waypoints are formatted **`{'x': 0, 'y': 0, 'z': 0}`**.
